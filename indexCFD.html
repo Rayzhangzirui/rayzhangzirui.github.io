@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>DEM simulation</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="lib/three.js"></script>
+	<script src="lib/STLLoader.js"></script>
+	<script src="lib/jquery-1.8.3.min.js"></script>
+	<script src="lib/OrbitControls.js"></script>
+	<script src="lib/stats.min.js"></script>
+	<script src="lib/dat.gui.min.js"></script>	
+	<script src="lib/Lut.js"></script>
+
+<style type="text/css">
+.modal {
+	display:    none;
+	position:   fixed;
+	z-index:    1000;
+	top:        0;
+	left:       0;
+	height:     100%;
+	width:      100%;
+	background: rgba( 255, 255, 255, .8 ) 
+	            url('http://i.stack.imgur.com/FhHRx.gif') 
+	            50% 50% 
+	            no-repeat;
+}
+
+body.loading {
+	overflow: hidden;   
+}
+
+body.loading .modal {
+		display: block;
+}
+</style>
+
+</head>
+
+<body>
+	<div id="container"></div>
+</body>
+
+<script src="mesh.js"></script>
+<div class="modal"><!-- Place at bottom of page --></div>
+</html>
