@@ -160,9 +160,8 @@ function drawGrid(){
 }
 
 $.ajax({
-	// url: 'https://dl.dropboxusercontent.com/s/47t1zbfskt9eqcn/data.json?dl=0',//remote
-	url: 'meshdata.json',//local
-	// async: false,
+	url: 'https://dl.dropboxusercontent.com/s/dy610iglj2yyjmw/CFDdata.json?dl=0',//remote
+	// url: 'meshdata.json',//local
 	dataType: 'json',
 	success: function (data) {
 				alldata = data;
