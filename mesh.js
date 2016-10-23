@@ -26,6 +26,8 @@ lut.setMin( 0 );
 var lambertMaterial = new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors });
 var basicMaterial = new THREE.MeshBasicMaterial({ vertexColors: THREE.VertexColors });
 var slpMesh,ctnMesh;
+//timer
+var timer;
 
 $(document).on({
     ajaxStart: function() { $("body").addClass("loading"); },
@@ -111,7 +113,7 @@ function setupGui() {
 	gui.add( effectController, "pause" );
 	gui.add( effectController, "colormap" );
 
-	gui.add( effectController, "fps", 1.0,10.0).step(1.0);
+	gui.add( effectController, "fps", 1.0,10.0).step(1.0).name("Frame rate");
 	
 	// material (color)
 	gui.add( effectController, "Hue", 0.0, 1.0 );
@@ -119,9 +121,9 @@ function setupGui() {
 	gui.add( effectController, "Lightness", 0.0, 1.0 );
 	//light 
 
-	gui.add( effectController, "lx", 0, 1.0, 0.025 ).name("x");
-	gui.add( effectController, "ly", -1.0, 1.0, 0.025 ).name("y");
-	gui.add( effectController, "lz", 0, 1.0, 0.025 ).name("z");
+	gui.add( effectController, "lx", 0, 1.0, 0.025 ).name("light.x");
+	gui.add( effectController, "ly", -1.0, 1.0, 0.025 ).name("light.y");
+	gui.add( effectController, "lz", 0, 1.0, 0.025 ).name("light.z");
 
 }
 
@@ -136,7 +138,7 @@ function drawflume(){
 	scene.add( slope );
 	// container
 	var container = new THREE.Mesh( new THREE.PlaneGeometry(1,1), flumeMaterial );
-	container.position.set( 0.5, 0 , 0.001 );
+	container.position.set( 0.5, 0 , 0.002 );
 	scene.add( container );
 	// //axis
 	// var axisHelper = new THREE.AxisHelper( 1 );
@@ -160,8 +162,8 @@ function drawGrid(){
 }
 
 $.ajax({
-	url: 'https://dl.dropboxusercontent.com/s/dy610iglj2yyjmw/CFDdata.json?dl=0',//remote
-	// url: 'meshdata.json',//local
+	// url: 'https://dl.dropboxusercontent.com/s/dy610iglj2yyjmw/CFDdata.json?dl=0',//remote
+	url: 'meshdata.json',//local
 	dataType: 'json',
 	success: function (data) {
 				alldata = data;
@@ -189,7 +191,6 @@ function updateT() {
 function updateScene(){
 	
 	light.position.set( effectController.lx, effectController.ly, effectController.lz );
-
 	// color upate
 	if (effectController.colormap == false){
 		legendGroup.visible = false;
@@ -206,8 +207,11 @@ function updateScene(){
 		updateGeo(ctnGeometry,alldata.data.ctn,t,lut);
 		slpMesh.material = basicMaterial;
 		ctnMesh.material = basicMaterial;
-
 	}
+	
+	scene.remove(timer);
+	timer = spriteTimer(t);
+	scene.add(timer);
 
 }
 
@@ -230,8 +234,27 @@ function initMesh(){
 	}
 	legendGroup.visible = false;
 	scene.add(legendGroup);
+
+	timer = spriteTimer(t);
+	scene.add(timer);
+
 }
 
+function spriteTimer(t) {
+	var canvasTitle = document.createElement( 'canvas' );
+	var contextTitle = canvasTitle.getContext( '2d' );
+	t = t/10;
+	contextTitle.font = 'Normal 20px Arial';		
+	contextTitle.fillText( "t = "+t.toString()+"s", canvasTitle.width/2, canvasTitle.height/2 );
+
+	var txtTitle = new THREE.CanvasTexture( canvasTitle );
+	txtTitle.minFilter = THREE.LinearFilter;
+	var spriteMaterialTitle = new THREE.SpriteMaterial( { map: txtTitle } );
+	var spriteTitle = new THREE.Sprite( spriteMaterialTitle );
+	spriteTitle.scale.set( 2/2, 1/2, 1/2);
+	spriteTitle.position.set( 1.0, 0.6, 0.0);
+	return spriteTitle;
+}
 
 function render() {
 	var delta = clock.getDelta();

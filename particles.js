@@ -20,7 +20,7 @@ var textureLoader = new THREE.TextureLoader();
 var mapC = textureLoader.load( "ball.png" );
 var newTime = 0, oldTime = 0;
 var t=0;
-
+var timer;
 var Sgeometry = new THREE.Geometry();
 var Lgeometry = new THREE.Geometry();
 
@@ -55,42 +55,27 @@ function init() {
 	stats.domElement.children[ 0 ].children[ 0 ].style.color = "#aaa";
 	stats.domElement.children[ 0 ].style.background = "transparent";
 	stats.domElement.children[ 0 ].children[ 1 ].style.display = "none";
-	// grid
-	var size = 1, step = 0.1;
-	var gridGeometry = new THREE.Geometry();
-	for ( var i = - size; i <= size; i += step ) {
-		gridGeometry.vertices.push( new THREE.Vector3( - size, i, 0 ) );
-		gridGeometry.vertices.push( new THREE.Vector3(   size, i, 0 ) );
-		gridGeometry.vertices.push( new THREE.Vector3( i,- size,0 ) );
-		gridGeometry.vertices.push( new THREE.Vector3( i, size,0 ) );
-	}
-	var material = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2 } );
-	var line = new THREE.LineSegments( gridGeometry, material );
-	scene.add( line );
+	
 	// CAMERA
-	camera = new THREE.PerspectiveCamera( 1, canvasRatio, 2, 1000 );
+	camera = new THREE.PerspectiveCamera( 1, canvasRatio, 0.1, 1000 );
 	camera.up = new THREE.Vector3( 0, 0, 1 )
 	camera.position.set( 60, -60, 40 );
-
-	// camera = new THREE.OrthographicCamera( -1,1,1,-1, 500, -500 );
-	// camera.up = new THREE.Vector3( 0, 0, 1 )
-	// camera.position.set( 1,-1,1 );
-	// camera.lookAt( scene.position );
 
 	// CONTROLS
 	cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
 	cameraControls.target.set(-0.1,0,0);
-	//axis
-	var axisHelper = new THREE.AxisHelper( 2 );
-	scene.add( axisHelper );
-	
+
+	timer = spriteTimer(t);
+	scene.add(timer);
+	window.addEventListener( 'resize', onWindowResize, false );
+	drawGrid();
 	setupGui();
 	drawflume();
 	particleInit();
 }
 
-function setupGui() {
 
+function setupGui() {
 	effectController = {
 		pause: false,
 		fps: 10
@@ -103,6 +88,24 @@ function setupGui() {
 
 }
 
+function drawGrid() {
+	// grid
+	var size = 1, step = 0.1;
+	var gridGeometry = new THREE.Geometry();
+	for ( var i = - size; i <= size; i += step ) {
+		gridGeometry.vertices.push( new THREE.Vector3( - size, i, 0 ) );
+		gridGeometry.vertices.push( new THREE.Vector3(   size, i, 0 ) );
+		gridGeometry.vertices.push( new THREE.Vector3( i,- size,0 ) );
+		gridGeometry.vertices.push( new THREE.Vector3( i, size,0 ) );
+	}
+	var material = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 1 } );
+	var line = new THREE.LineSegments( gridGeometry, material );
+	scene.add( line );
+		//axis
+	var axisHelper = new THREE.AxisHelper( 2 );
+	scene.add( axisHelper );
+}
+
 function drawflume(){
 	var flumeMaterial = new THREE.MeshBasicMaterial( {color:0x708090,side: THREE.DoubleSide } );
 	var slopeL = 1.2;
@@ -112,15 +115,15 @@ function drawflume(){
 	scene.add( slope );
 	// container
 	var container = new THREE.Mesh( new THREE.PlaneGeometry( 0.5,0.5), flumeMaterial );
-	container.position.set( 0.25, 0 , 0 );
+	container.position.set(0.25,0,0);
 	scene.add( container );
 	//slope sidewall
 
 }
 
 $.ajax({
-	 url: 'https://dl.dropboxusercontent.com/s/47t1zbfskt9eqcn/DEMdata.json?dl=0',//remote
-	// url: 'data.json',//local
+	 // url: 'https://dl.dropboxusercontent.com/s/47t1zbfskt9eqcn/DEMdata.json?dl=0',//remote
+	url: 'data.json',//local
 	dataType: 'json',
 	success: function (data) {
 				alldata = data;
@@ -139,6 +142,7 @@ function animate() {
 }
 
 function particleInit(){
+	t = 10;
 	var n = alldata.timedata[t].x.length;
 	for ( var i = 0; i < n; i ++ ) {
 		var vertex = new THREE.Vector3();
@@ -147,8 +151,10 @@ function particleInit(){
 		vertex.z = alldata.timedata[t].z[i];
 		(alldata.timedata[t].r[i] >= 0.003)? Lgeometry.vertices.push( vertex ): Sgeometry.vertices.push( vertex );
 	}
-	var Smaterial = new THREE.PointsMaterial( { size: 0.5, map: mapC, color: 0x4682B4,alphaTest: 0.5, depthTest: true, transparent : true} );
-	var Lmaterial = new THREE.PointsMaterial( { size: 1, map: mapC, color: 0xB22222, alphaTest: 0.5, depthTest: true, transparent : true} );
+	var Smaterial = new THREE.PointsMaterial( { size: 0.5, map: mapC, color: 0x4682B4,
+		alphaTest: 0.5, depthTest: true, transparent : true} );
+	var Lmaterial = new THREE.PointsMaterial( { size: 1, map: mapC, color: 0xB22222, 
+		alphaTest: 0.5, depthTest: true, transparent : true} );
 
 	Lparticles = new THREE.Points(Lgeometry,Lmaterial);
 	Sparticles = new THREE.Points(Sgeometry,Smaterial);
@@ -169,7 +175,6 @@ var kS = 0;
 			Lgeometry.vertices[kL].y = alldata.timedata[t].y[i];
 			Lgeometry.vertices[kL].z = alldata.timedata[t].z[i];
 			kL++;
-
 		}else{
 			Sgeometry.vertices[kS].x = alldata.timedata[t].x[i];
 			Sgeometry.vertices[kS].y = alldata.timedata[t].y[i];
@@ -180,6 +185,10 @@ var kS = 0;
 
 	Sgeometry.verticesNeedUpdate = true;
 	Lgeometry.verticesNeedUpdate = true;
+
+	scene.remove(timer);
+	timer = spriteTimer(t);
+	scene.add(timer);
 }
 
 function updateT(t) {
@@ -195,7 +204,6 @@ function render() {
 	var delta = clock.getDelta();
 	cameraControls.update( delta );
 	renderer.render( scene, camera );
-
 	if (!effectController.pause){
 		newTime += delta;
 		if ( newTime > oldTime + 0.95/effectController.fps ) {
@@ -206,6 +214,29 @@ function render() {
 		}
 	}
 		
+}
+
+function onWindowResize() {
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	render();
+}
+
+function spriteTimer(t) {
+	var canvasTitle = document.createElement( 'canvas' );
+	var contextTitle = canvasTitle.getContext( '2d' );
+	t = t/10;
+	contextTitle.font = 'Normal 20px Arial';		
+	contextTitle.fillText( "t = "+t.toString()+"s", canvasTitle.width/2, canvasTitle.height/2 );
+
+	var txtTitle = new THREE.CanvasTexture( canvasTitle );
+	txtTitle.minFilter = THREE.LinearFilter;
+	var spriteMaterialTitle = new THREE.SpriteMaterial( { map: txtTitle } );
+	var spriteTitle = new THREE.Sprite( spriteMaterialTitle );
+	spriteTitle.scale.set( 2/2, 1/2, 1/2);
+	spriteTitle.position.set( 1.0, 0.6, 0.0);
+	return spriteTitle;
 }
 
 
