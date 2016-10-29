@@ -128,7 +128,7 @@ function setupGui() {
 }
 
 function drawflume(){
-	var flumeMaterial = new THREE.MeshBasicMaterial( {color:0x708090,side: THREE.DoubleSide } );
+	var flumeMaterial = new THREE.MeshBasicMaterial( {color:0xD3D3D3,side: THREE.DoubleSide } );
 	var slopeL = 1.5;
 	var slopeW = 0.2;
 	var angle = 14;
