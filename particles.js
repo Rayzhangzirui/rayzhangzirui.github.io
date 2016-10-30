@@ -128,8 +128,8 @@ function drawflume(){
 }
 
 $.ajax({
-	 // url: 'https://dl.dropboxusercontent.com/s/47t1zbfskt9eqcn/DEMdata.json?dl=0',//remote
-	url: 'data2.json',//local
+	 url: 'https://dl.dropboxusercontent.com/s/47t1zbfskt9eqcn/DEMdata.json?dl=0',//remote
+	// url: 'data2.json',//local
 	dataType: 'json',
 	success: function (data) {
 				alldata = data;
