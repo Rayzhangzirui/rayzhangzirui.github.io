@@ -89,7 +89,7 @@ function setupGui() {
 	var gui = new dat.GUI();
 	gui.add( effectController, "pause" );
 	gui.add( effectController, "fps", 1.0,10.0).step(1.0);
-	gui.add( effectController, "Velocity colormap" );
+	gui.add( effectController, "colormap" ).name("velocity colormap");;
 }
 
 function drawGrid() {
