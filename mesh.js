@@ -111,7 +111,7 @@ function setupGui() {
 	var gui = new dat.GUI();
 	// material (attributes)
 	gui.add( effectController, "pause" );
-	gui.add( effectController, "colormap" );
+	gui.add( effectController, "Height colormap" );
 
 	gui.add( effectController, "fps", 1.0,10.0).step(1.0).name("Frame rate");
 	

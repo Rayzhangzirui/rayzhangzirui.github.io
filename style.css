@@ -43,9 +43,9 @@ p.lead {text-align: center; color: #727878;}
 #experiences .experience { margin-bottom: 20px; }
 #experiences .experience p > strong { display: block; padding-top: 8px; margin-bottom: 10px; }
 #experiences .experience .experience-details { display: block; margin-top: 6px; }
-#experiences .experience .experience-details * { color: #89bdd3; }
+#experiences .experience .experience-details *{ color: #89bdd3; }
 #experiences .experience .experience-details .seperator { color: #BCBCBC; }
-
+.link *{ color: #89bdd3; }
 /* #projects .row { margin: 0px; } // bootstrap 3.1- hack */
 #projects .row > div { margin-bottom: 30px; }
 #projects figure { position: relative; overflow: hidden; }
@@ -81,7 +81,9 @@ p.lead {text-align: center; color: #727878;}
 	padding: 15px;
 }
 
-
+#abilities {
+	min-height: 600px;
+}
 #abilities a {
 	margin: 5px;
 	border: none;
