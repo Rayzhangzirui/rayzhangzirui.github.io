@@ -49,7 +49,16 @@ function init() {
 
 	var container = document.getElementById('container');
 	container.appendChild( renderer.domElement );
-
+	//info
+	var info = document.createElement( 'div' );
+	info.style.position = 'absolute';
+	info.style.top = '10px';
+	info.style.width = '100%';
+	info.style.textAlign = 'center';
+	info.innerHTML = 'DEM simulation of finite volume dry granular flow<br>Visualization with <a href="http://threejs.org" target="_blank">three.js</a>\
+	<br><strong>Drag</strong> to rotate, <strong>scroll</strong> to zoom,\
+	<strong>colormap</strong>: Color by velocity';
+	container.appendChild( info );
 	// STATS
 	stats = new Stats();
 	stats.domElement.style.position = 'absolute';
@@ -72,7 +81,7 @@ function init() {
 	timer = spriteTimer(t);
 	scene.add(timer);
 	window.addEventListener( 'resize', onWindowResize, false );
-	drawGrid();
+	// drawGrid();
 	setupGui();
 	drawflume();
 	particleInit();
@@ -89,7 +98,7 @@ function setupGui() {
 	var gui = new dat.GUI();
 	gui.add( effectController, "pause" );
 	gui.add( effectController, "fps", 1.0,10.0).step(1.0);
-	gui.add( effectController, "colormap" ).name("velocity colormap");;
+	gui.add( effectController, "colormap" ).name("colormap");;
 }
 
 function drawGrid() {

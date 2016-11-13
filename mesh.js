@@ -52,6 +52,17 @@ function init() {
 
 	var container = document.getElementById('container');
 	container.appendChild( renderer.domElement );
+	//info
+	var info = document.createElement( 'div' );
+	info.style.position = 'absolute';
+	info.style.top = '10px';
+	info.style.width = '100%';
+	info.style.textAlign = 'center';
+	info.innerHTML = 'CFD simulation of mudflow flume test<br>Visualization with <a href="http://threejs.org" target="_blank">three.js</a><br>\
+	<strong>Drag</strong> to rotate, <strong>scroll</strong> to zoom\
+	<br><strong>light</strong>: lighting direction\
+	<br><strong>colormap</strong>: Color by depth';
+	container.appendChild( info );
 
 	// STATS
 	stats = new Stats();
@@ -111,14 +122,14 @@ function setupGui() {
 	var gui = new dat.GUI();
 	// material (attributes)
 	gui.add( effectController, "pause" );
-	gui.add( effectController, "colormap" ).name("height colormap");
+	gui.add( effectController, "colormap" ).name("colormap");
 
 	gui.add( effectController, "fps", 1.0,10.0).step(1.0).name("Frame rate");
 	
 	// material (color)
-	gui.add( effectController, "Hue", 0.0, 1.0 );
-	gui.add( effectController, "Saturation", 0.0, 1.0 );
-	gui.add( effectController, "Lightness", 0.0, 1.0 );
+	// gui.add( effectController, "Hue", 0.0, 1.0 );
+	// gui.add( effectController, "Saturation", 0.0, 1.0 );
+	// gui.add( effectController, "Lightness", 0.0, 1.0 );
 	//light 
 
 	gui.add( effectController, "lx", 0, 1.0, 0.025 ).name("light.x");
@@ -162,8 +173,8 @@ function drawGrid(){
 }
 
 $.ajax({
-	url: 'https://dl.dropboxusercontent.com/s/dy610iglj2yyjmw/CFDdata.json?dl=0',//remote
-	// url: 'meshdata.json',//local
+	// url: 'https://dl.dropboxusercontent.com/s/dy610iglj2yyjmw/CFDdata.json?dl=0',//remote
+	url: 'meshdata.json',//local
 	dataType: 'json',
 	success: function (data) {
 				alldata = data;
@@ -226,7 +237,7 @@ function initMesh(){
 
 	var legend = lut.setLegendOn({'layout':'horizontal','position': { 'x': 0.5, 'y': 1, 'z': 0.002 },'dimensions':{'width': 0.1, 'height': 0.5} } );
 	legendGroup.add(legend);					
-	var labels = lut.setLegendLabels( { 'title': 'height', 'um': 'mm', 'ticks': 5 , 'fontsize': 20,'decimal':1} );
+	var labels = lut.setLegendLabels( { 'title': 'Depth', 'um': 'mm', 'ticks': 5 , 'fontsize': 20,'decimal':1} );
 	legendGroup.add ( labels['title'] );
 	for ( var i = 0; i < Object.keys( labels[ 'ticks' ] ).length; i++ ) {
 		legendGroup.add ( labels[ 'lines' ][ i ] );
