@@ -292,14 +292,7 @@ function construtGeo(xyzData,t){
 	var vertices = new Float32Array(3*n);
 	var color = new Float32Array(3*n);
 	var height = new Float32Array(3*n);
-
 	var indices = Uint32Array.from(xyzData.face);
-
-	// var indices = new Uint32Array(66456);
-	// for ( var j = 0; j < 66456; j ++ ) {
-	// 	indices[j]=xyzData.face[j];
-	// }
-
 	var colorValue = new THREE.Color(0xffffff );
 		colorValue.setHSL(0.1,0.1,0.3)
 	for ( var i = 0; i < n; i ++ ) {
